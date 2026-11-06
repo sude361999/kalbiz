@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kalbiz - Bir Kalp Atışı Kadar Yakın...</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fff1f2',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            900: '#881337',
+                            bg: '#050508',
+                            card: '#111118',
+                        }
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 0.7s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'heartbeat': 'heartbeat 1.1s ease-in-out infinite',
+                        'glow': 'glow 2.5s ease-in-out infinite alternate',
+                        'ripple': 'ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite',
+                    },
+                    keyframes: {
+                        heartbeat: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '15%': { transform: 'scale(1.12)' },
+                            '30%': { transform: 'scale(1)' },
+                            '45%': { transform: 'scale(1.06)' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 20px rgba(225, 29, 72, 0.25)' },
+                            '100%': { boxShadow: '0 0 45px rgba(225, 29, 72, 0.65)' }
+                        },
+                        ripple: {
+                           '0%': { transform: 'scale(0.8)', opacity: '1' },
+                            '100%': { transform: 'scale(1.8)', opacity: '0' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030305;
+            color: #f1f5f9;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+        .app-glass {
+            background: rgba(18, 18, 26, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .card-glass {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="flex justify-center items-center min-h-screen p-0 sm:p-4 bg-zinc-950">
+
+    <!-- Mobile Device Frame Wrapper -->
+    <div class="relative w-full max-w-[420px] h-[100vh] sm:h-[860px] sm:rounded-[48px] bg-black border-0 sm:border-[8px] sm:border-zinc-800 shadow-2xl overflow-hidden flex flex-col justify-between">
+        
+        <!-- OS Status Bar -->
+        <div class="w-full bg-black/90 px-6 pt-3 pb-2 flex justify-between items-center text-xs text-gray-300 z-40 select-none border-b border-white/5">
+            <span id="os-time" class="font-semibold text-xs tracking-tight">09:41</span>
+            <div class="hidden sm:block w-24 h-4 bg-zinc-900 rounded-full border border-white/10"></div>
+            <div class="flex items-center gap-2 text-[11px]">
+                <i class="fa-solid fa-signal"></i>
+                <i class="fa-solid fa-wifi"></i>
+                <i class="fa-solid fa-battery-three-quarters text-emerald-400"></i>
+            </div>
+        </div>
+
+        <!-- App Main Header -->
+        <header class="px-5 py-3 app-glass flex items-center justify-between z-30">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-rose-600 to-rose-400 flex items-center justify-center shadow-md shadow-rose-600/50">
+                    <i class="fa-solid fa-heart text-white text-xs"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-extrabold tracking-wider text-white leading-none">KALBİZ</h1>
+                    <span class="text-[9px] text-rose-400 font-medium">Bir kalp atışı kadar yakın...</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-semibold">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Bağlı: Canan</span>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Body Container -->
+        <main class="flex-1 overflow-y-auto no-scrollbar relative p-4 space-y-4">
+
+            <!-- TAB 1: BAĞLANTI (Pendant & Connection) -->
+            <section id="tab-sync" class="tab-content space-y-4">
+                <div class="card-glass rounded-2xl p-4 flex items-center justify-between border border-rose-500/20">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-rose-500 to-rose-300 flex items-center justify-center font-bold text-white text-sm shadow-md">
+                            C
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-white">Canan K. <span class="text-[10px] text-rose-400 font-normal">(Eşleşildi)</span></div>
+                            <div class="text-[10px] text-gray-400 flex items-center gap-1 mt-0.5">
+                                <i class="fa-solid fa-location-dot text-rose-500"></i> Mesafe: <strong>450 km</strong> (İstanbul)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xs font-black text-rose-400 font-mono" id="sync-bpm-display">74 BPM</div>
+                        <div class="text-[9px] text-emerald-400">Normal Ritim</div>
+                    </div>
+                </div>
+
+                <!-- Central Interactive Heart Pendant -->
+                <div class="card-glass rounded-3xl p-6 border border-rose-500/30 flex flex-col items-center justify-center text-center relative overflow-hidden my-2">
+                    <div id="pendant-ripple" class="absolute w-44 h-44 rounded-full border border-rose-500/40 animate-ripple pointer-events-none opacity-0"></div>
+
+                    <p class="text-[11px] text-gray-400 mb-4 uppercase tracking-widest font-semibold">Akıllı Kolye Dokunmatik Simülatörü</p>
+
+                    <div id="necklace-pendant" onclick="triggerPartnerPulse()" class="w-48 h-48 rounded-full bg-gradient-to-tr from-zinc-950 via-rose-950 to-zinc-900 border-4 border-rose-500/60 shadow-[0_0_50px_rgba(225,29,72,0.35)] flex flex-col items-center justify-center cursor-pointer active:scale-95 transition-all group relative select-none">
+                        <div class="w-20 h-20 rounded-full bg-rose-600/20 border border-rose-500 flex items-center justify-center animate-glow">
+                            <i id="heart-icon" class="fa-solid fa-heart text-4xl text-rose-500 group-hover:scale-110 transition-transform animate-heartbeat"></i>
+                        </div>
+                        <span class="mt-3 text-[10px] font-bold text-white tracking-widest uppercase">DOKUN & HİSSET</span>
+                        <span class="text-[9px] text-rose-300 font-mono mt-0.5">Gerçek Kalp Titreşimi</span>
+                    </div>
+
+                    <!-- BPM Controls -->
+                    <div class="mt-5 flex items-center justify-center gap-2 bg-black/50 p-1.5 rounded-full border border-white/10 text-[11px]">
+                        <span class="text-gray-400 px-2 text-[10px]">Test Ritmi:</span>
+                        <button onclick="changeSimBpm(62)" id="btn-bpm-62" class="px-2.5 py-1 rounded-full bg-white/10 text-white font-medium hover:bg-rose-600 transition-colors">62 BPM</button>
+                        <button onclick="changeSimBpm(74)" id="btn-bpm-74" class="px-2.5 py-1 rounded-full bg-rose-600 text-white font-medium hover:bg-rose-600 transition-colors">74 BPM</button>
+                        <button onclick="changeSimBpm(125)" id="btn-bpm-125" class="px-2.5 py-1 rounded-full bg-white/10 text-white font-medium hover:bg-rose-600 transition-colors">125 BPM</button>
+                    </div>
+
+                    <p class="text-[10px] text-gray-400 mt-4 leading-relaxed">
+                        Kolyeye dokunduğunuzda eşleştiğiniz kişinin anlık kalp atışını göğsünüzde hissedersiniz.
+                    </p>
+                </div>
+            </section>
+
+            <!-- TAB 2: BİYOMETRİK (Metrics & SOS) -->
+            <section id="tab-metrics" class="tab-content hidden space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-sm font-bold text-white">Canan'ın Canlı Sağlık Verileri</h2>
+                    <span class="text-[10px] text-emerald-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Senkronize</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div class="card-glass p-3 rounded-2xl border border-white/10">
+                        <div class="flex justify-between items-center text-gray-400 text-[10px] mb-1">
+                            <span>KALP RİTMİ</span>
+                            <i class="fa-solid fa-heart-pulse text-rose-500"></i>
+                        </div>
+                        <div class="text-lg font-black text-white font-mono" id="metric-bpm">74 <span class="text-[10px] text-gray-400">BPM</span></div>
+                        <div class="text-[9px] text-emerald-400 mt-1">Stabil Aralık</div>
+                    </div>
+
+                    <div class="card-glass p-3 rounded-2xl border border-white/10">
+                        <div class="flex justify-between items-center text-gray-400 text-[10px] mb-1">
+                            <span>TANSİYON</span>
+                            <i class="fa-solid fa-stethoscope text-rose-400"></i>
+                        </div>
+                        <div class="text-lg font-black text-white font-mono">120/80</div>
+                        <div class="text-[9px] text-emerald-400 mt-1">İdeal Seviye</div>
+                    </div>
+
+                    <div class="card-glass p-3 rounded-2xl border border-white/10">
+                        <div class="flex justify-between items-center text-gray-400 text-[10px] mb-1">
+                            <span>STRES DÜZEYİ</span>
+                            <i class="fa-solid fa-brain text-purple-400"></i>
+                        </div>
+                        <div class="text-lg font-black text-white font-mono">%18</div>
+                        <div class="text-[9px] text-purple-300 mt-1">Sakin Mod</div>
+                    </div>
+
+                    <div class="card-glass p-3 rounded-2xl border border-white/10">
+                        <div class="flex justify-between items-center text-gray-400 text-[10px] mb-1">
+                            <span>UYKU KALİTESİ</span>
+                            <i class="fa-solid fa-moon text-indigo-400"></i>
+                        </div>
+                        <div class="text-lg font-black text-white font-mono">7s 40d</div>
+                        <div class="text-[9px] text-indigo-300 mt-1">Derin Uyku</div>
+                    </div>
+                </div>
+
+                <!-- Privacy Settings Toggle Box -->
+                <div class="card-glass p-3.5 rounded-2xl border border-white/10 space-y-2.5">
+                    <div class="text-xs font-bold text-white flex items-center justify-between">
+                        <span>Bileklik Gizlilik İzinleri</span>
+                        <i class="fa-solid fa-shield-halved text-rose-400"></i>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-gray-300">
+                        <span>Konum Paylaşımı</span>
+                        <input type="checkbox" checked class="accent-rose-600 w-4 h-4 rounded">
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-gray-300">
+                        <span>Acil Durum Kişileri (SOS)</span>
+                        <input type="checkbox" checked class="accent-rose-600 w-4 h-4 rounded">
+                    </div>
+                </div>
+
+                <!-- Emergency SOS Panic Button -->
+                <div class="bg-gradient-to-r from-rose-950 to-zinc-900 border border-rose-600/40 p-4 rounded-2xl flex items-center justify-between">
+                    <div>
+                        <div class="text-xs font-extrabold text-white flex items-center gap-1.5">
+                            <i class="fa-solid fa-triangle-exclamation text-rose-500 animate-bounce"></i> Acil Kriz / SOS Tetikle
+                        </div>
+                        <div class="text-[10px] text-gray-300 mt-0.5">Ambulans ve aile bireylerine anında bildirim yollar.</div>
+                    </div>
+                    <button onclick="triggerEmergencySOS()" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-lg shadow-rose-600/40">
+                        SOS
+                    </button>
+                </div>
+            </section>
+
+            <!-- TAB 3: HATIRLATICI (Reminders & Wristband Theme) -->
+            <section id="tab-reminders" class="tab-content hidden space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-sm font-bold text-white">Bileklik Tema & Hatırlatıcılar</h2>
+                    <i class="fa-solid fa-bell text-rose-400"></i>
+                </div>
+
+                <!-- Theme Customizer -->
+                <div class="card-glass p-4 rounded-2xl border border-white/10 space-y-3">
+                    <span class="text-xs font-bold text-white block">Bileklik Ekran Arka Planı</span>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button onclick="setTheme('rose')" class="p-2 rounded-xl bg-rose-950 border border-rose-500 text-[10px] font-semibold text-rose-300 text-center">Kalp Kırmızı</button>
+                        <button onclick="setTheme('indigo')" class="p-2 rounded-xl bg-indigo-950 border border-indigo-500 text-[10px] font-semibold text-indigo-300 text-center">Gece Mavisi</button>
+                        <button onclick="setTheme('emerald')" class="p-2 rounded-xl bg-emerald-950 border border-emerald-500 text-[10px] font-semibold text-emerald-300 text-center">Doğa Yeşili</button>
+                        <button onclick="setTheme('gold')" class="p-2 rounded-xl bg-amber-950 border border-amber-500 text-[10px] font-semibold text-amber-300 text-center">Özel Altın</button>
+                    </div>
+                </div>
+
+                <!-- Reminders list -->
+                <div class="card-glass p-4 rounded-2xl border border-white/10 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-white">Önemli İşler & Zaman Kur</span>
+                        <span class="text-[10px] text-rose-400 font-medium">Bilekliğe Bildirim Gönder</span>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between bg-black/40 p-2.5 rounded-xl border border-white/5">
+                            <div>
+                                <div class="text-xs font-bold text-white">İlaç Saati (Tansiyon)</div>
+                                <div class="text-[10px] text-gray-400">Bugün, 21:00</div>
+                            </div>
+                            <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-semibold">Aktif</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-black/40 p-2.5 rounded-xl border border-white/5">
+                            <div>
+                                <div class="text-xs font-bold text-white">Canan'ın Doğum Günü</div>
+                                <div class="text-[10px] text-gray-400">Yarın, 00:00</div>
+                            </div>
+                            <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-semibold">Aktif</span>
+                        </div>
+                    </div>
+                    <button onclick="showAppToast('Yeni hatırlatıcı bilekliğe eklendi!')" class="w-full py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/10 transition-colors">
+                        + Hatırlatıcı Ekle
+                    </button>
+                </div>
+            </section>
+
+            <!-- TAB 4: MAĞAZA (Store & Checkout) -->
+            <section id="tab-shop" class="tab-content hidden space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-sm font-bold text-white">Kalbiz E-Ticaret Mağazası</h2>
+                    <div class="flex bg-black/60 p-0.5 rounded-lg border border-white/10 text-[10px]">
+                        <button onclick="setStoreRegion('TR')" id="shop-reg-tr" class="px-2.5 py-1 rounded-md font-bold bg-rose-600 text-white">Yurt İçi (₺)</button>
+                        <button onclick="setStoreRegion('INT')" id="shop-reg-int" class="px-2.5 py-1 rounded-md font-bold text-gray-400">Global ($)</button>
+                    </div>
+                </div>
+
+                <!-- Package Type Toggle (Tekli vs İkili) -->
+                <div class="card-glass p-1.5 rounded-2xl border border-white/10 flex gap-1">
+                    <button onclick="selectPackageType('single')" id="pkg-btn-single" class="flex-1 py-2 rounded-xl text-xs font-bold transition-all bg-rose-600 text-white shadow-md">
+                        <i class="fa-solid fa-user mr-1"></i> Tekli (1 Kişilik)
+                    </button>
+                    <button onclick="selectPackageType('double')" id="pkg-btn-double" class="flex-1 py-2 rounded-xl text-xs font-bold transition-all bg-white/5 text-gray-400 hover:text-white">
+                        <i class="fa-solid fa-user-group mr-1"></i> İkili (Çift Paketi %15 İndirimli)
+                    </button>
+                </div>
+
+                <!-- Product Configuration & Pricing Card -->
+                <div class="card-glass p-4 rounded-2xl border border-rose-500/30 space-y-4 relative overflow-hidden">
+                    <div id="package-badge" class="absolute top-3 right-3 bg-rose-600/30 border border-rose-500/40 text-rose-300 text-[9px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">
+                        Bireysel Kullanım
+                    </div>
+
+                    <div>
+                        <h3 id="shop-product-title" class="text-sm font-extrabold text-white">Kalbiz Tek Kişilik Ekosistem</h3>
+                        <p id="shop-product-desc" class="text-[11px] text-gray-400 mt-1 leading-tight">1 Adet Akıllı Kolye + 1 Adet Akıllı Bileklik</p>
+                    </div>
+
+                    <!-- Component Selection Buttons -->
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold text-gray-300 uppercase tracking-wider block">Parça / Parça Seti Seçimi:</label>
+                        <div class="grid grid-cols-3 gap-1.5 text-[10px]">
+                            <button onclick="selectComponent('full')" id="comp-btn-full" class="p-2 rounded-xl border border-rose-500 bg-rose-500/20 text-white font-bold text-center transition-all">
+                                Kolye + Bileklik
+                            </button>
+                            <button onclick="selectComponent('band')" id="comp-btn-band" class="p-2 rounded-xl border border-white/10 bg-black/40 text-gray-400 hover:text-white text-center transition-all">
+                                Sadece Bileklik
+                            </button>
+                            <button onclick="selectComponent('necklace')" id="comp-btn-necklace" class="p-2 rounded-xl border border-white/10 bg-black/40 text-gray-400 hover:text-white text-center transition-all">
+                                Sadece Kolye
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Price Display -->
+                    <div class="flex items-end justify-between pt-2 border-t border-white/10">
+                        <div>
+                            <div class="text-[10px] text-gray-400">Toplam Fiyat</div>
+                            <div class="text-xl font-black text-rose-400 font-mono" id="shop-dynamic-price">3.950 TL</div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] text-emerald-400 flex items-center justify-end gap-1">
+                                <i class="fa-solid fa-truck-fast"></i> Ücretsiz Kargo
+                            </span>
+                            <span class="text-[9px] text-gray-400">2 Yıl Garanti & İade Garantisi</span>
+                        </div>
+                    </div>
+
+                    <button onclick="buyConfiguredProduct()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white font-bold text-xs shadow-lg shadow-rose-600/30 transition-all">
+                        Siparişi Tamamla & Satın Al
+                    </button>
+                </div>
+
+                <!-- Stores Info -->
+                <div class="card-glass p-3.5 rounded-2xl border border-white/10 text-[10px] text-gray-400 space-y-1">
+                    <div class="font-bold text-white mb-1"><i class="fa-solid fa-store text-rose-400"></i> Resmi Satış Noktaları:</div>
+                    <div>• Kalbiz Mağazaları & kalbiz.com (Doğrudan Sipariş Avantajı)</div>
+                    <div>• Trendyol, Hepsiburada, Amazon & TeknoSA Mağazaları</div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="app-glass border-t border-white/10 px-2 py-2 flex items-center justify-around z-40">
+            <button onclick="switchTab('tab-sync', this)" class="nav-btn flex flex-col items-center gap-1 text-rose-500 w-1/4">
+                <i class="fa-solid fa-heart-pulse text-base"></i>
+                <span class="text-[9px] font-bold">Bağlantı</span>
+            </button>
+            <button onclick="switchTab('tab-metrics', this)" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-white w-1/4">
+                <i class="fa-solid fa-chart-line text-base"></i>
+                <span class="text-[9px] font-medium">Biyometrik</span>
+            </button>
+            <button onclick="switchTab('tab-reminders', this)" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-white w-1/4">
+                <i class="fa-solid fa-bell text-base"></i>
+                <span class="text-[9px] font-medium">Hatırlatıcı</span>
+            </button>
+            <button onclick="switchTab('tab-shop', this)" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-white w-1/4">
+                <i class="fa-solid fa-store text-base"></i>
+                <span class="text-[9px] font-medium">Mağaza</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Mobile Toast Message Box -->
+    <div id="app-toast" class="fixed bottom-20 z-50 card-glass border border-rose-500/50 text-white px-4 py-2.5 rounded-2xl shadow-2xl flex items-center gap-2.5 transition-all duration-300 translate-y-20 opacity-0 pointer-events-none text-xs">
+        <i class="fa-solid fa-heart text-rose-400"></i>
+        <span id="toast-text" class="font-semibold">İşlem Başarılı</span>
+    </div>
+
+    <script>
+        let audioCtx = null;
+        let activeBpm = 74;
+        let currentRegion = 'TR';
+
+        // Pricing Matrix Data Structure
+        let selectedPackage = 'single'; // 'single' or 'double'
+        let selectedComponent = 'full'; // 'full', 'band', or 'necklace'
+
+        const basePrices = {
+            TR: {
+                single: { full: 3950, band: 2150, necklace: 2250 },
+                double: { full: 6850, band: 3750, necklace: 3950 } // Double has built-in bundle discount
+            },
+            INT: {
+                single: { full: 120, band: 65, necklace: 70 },
+                double: { full: 210, band: 115, necklace: 120 }
+            }
+        };
+
+        function updateClock() {
+            const now = new Date();
+            const hrs = String(now.getHours()).padStart(2, '0');
+            const mins = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('os-time').innerText = `${hrs}:${mins}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function playSynthesizedHeartbeat() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.frequency.setValueAtTime(80, now);
+                osc.frequency.exponentialRampToValueAtTime(30, now + 0.12);
+                gain.gain.setValueAtTime(0.8, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.12);
+            } catch (e) {}
+        }
+
+        function triggerPartnerPulse() {
+            playSynthesizedHeartbeat();
+            if (navigator.vibrate) navigator.vibrate([70, 50, 40]);
+            
+            const heart = document.getElementById('heart-icon');
+            const ripple = document.getElementById('pendant-ripple');
+            
+            heart.classList.add('scale-125');
+            ripple.classList.remove('opacity-0');
+            
+            setTimeout(() => {
+                heart.classList.remove('scale-125');
+                ripple.classList.add('opacity-0');
+            }, 300);
+
+            showAppToast(`Canan'ın kalp atışı (${activeBpm} BPM) kolye üzerinde hissedildi!`);
+        }
+
+        function changeSimBpm(bpm) {
+            activeBpm = bpm;
+            document.getElementById('sync-bpm-display').innerText = `${bpm} BPM`;
+            document.getElementById('metric-bpm').innerText = `${bpm} BPM`;
+            showAppToast(`Simülasyon ritmi güncellendi: ${bpm} BPM`);
+        }
+
+        function triggerEmergencySOS() {
+            playSynthesizedHeartbeat();
+            if (navigator.vibrate) navigator.vibrate([300, 100, 300, 100, 300]);
+            showAppToast("⚠️ ACİL SOS BİLDİRİMİ: Ambulans ve eşleşilen kişiye iletildi!");
+        }
+
+        function switchTab(tabId, btnEl) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-rose-500');
+                btn.classList.add('text-gray-400');
+            });
+
+            btnEl.classList.remove('text-gray-400');
+            btnEl.classList.add('text-rose-500');
+        }
+
+        // Store Logic & Dynamic Calculation Engine
+        function selectPackageType(type) {
+            selectedPackage = type;
+            const btnSingle = document.getElementById('pkg-btn-single');
+            const btnDouble = document.getElementById('pkg-btn-double');
+
+            if (type === 'single') {
+                btnSingle.className = 'flex-1 py-2 rounded-xl text-xs font-bold transition-all bg-rose-600 text-white shadow-md';
+                btnDouble.className = 'flex-1 py-2 rounded-xl text-xs font-bold transition-all bg-white/5 text-gray-400 hover:text-white';
+            } else {
+                btnDouble.className = 'flex-1 py-2 rounded-xl text-xs font-bold transition-all bg-rose-600 text-white shadow-md';
+                btnSingle.className = 'flex-1 py-2 rounded-xl text-xs font-bold transition-all bg-white/5 text-gray-400 hover:text-white';
+            }
+            updateStoreDisplay();
+        }
+
+        function selectComponent(comp) {
+            selectedComponent = comp;
+            const btnFull = document.getElementById('comp-btn-full');
+            const btnBand = document.getElementById('comp-btn-band');
+            const btnNecklace = document.getElementById('comp-btn-necklace');
+
+            [btnFull, btnBand, btnNecklace].forEach(b => {
+                b.className = 'p-2 rounded-xl border border-white/10 bg-black/40 text-gray-400 hover:text-white text-center transition-all';
+            });
+
+            if (comp === 'full') {
+                btnFull.className = 'p-2 rounded-xl border border-rose-500 bg-rose-500/20 text-white font-bold text-center transition-all';
+            } else if (comp === 'band') {
+                btnBand.className = 'p-2 rounded-xl border border-rose-500 bg-rose-500/20 text-white font-bold text-center transition-all';
+            } else {
+                btnNecklace.className = 'p-2 rounded-xl border border-rose-500 bg-rose-500/20 text-white font-bold text-center transition-all';
+            }
+            updateStoreDisplay();
+        }
+
+        function setStoreRegion(region) {
+            currentRegion = region;
+            const btnTr = document.getElementById('shop-reg-tr');
+            const btnInt = document.getElementById('shop-reg-int');
+
+            if (region === 'TR') {
+                btnTr.className = 'px-2.5 py-1 rounded-md font-bold bg-rose-600 text-white';
+                btnInt.className = 'px-2.5 py-1 rounded-md font-bold text-gray-400';
+            } else {
+                btnInt.className = 'px-2.5 py-1 rounded-md font-bold bg-rose-600 text-white';
+                btnTr.className = 'px-2.5 py-1 rounded-md font-bold text-gray-400';
+            }
+            updateStoreDisplay();
+        }
+
+        function updateStoreDisplay() {
+            const price = basePrices[currentRegion][selectedPackage][selectedComponent];
+            const priceStr = currentRegion === 'TR' ? `${price.toLocaleString('tr-TR')} TL` : `$${price}`;
+            
+            document.getElementById('shop-dynamic-price').innerText = priceStr;
+
+            const badge = document.getElementById('package-badge');
+            const title = document.getElementById('shop-product-title');
+            const desc = document.getElementById('shop-product-desc');
+
+            const isDouble = selectedPackage === 'double';
+            badge.innerText = isDouble ? 'Çift Özel Seti' : 'Bireysel Kullanım';
+
+            let compTitle = '';
+            let compDesc = '';
+
+            if (selectedComponent === 'full') {
+                compTitle = isDouble ? 'Kalbiz İkili Çift Ekosistemi' : 'Kalbiz Tek Kişilik Ekosistem';
+                compDesc = isDouble ? '2 Adet Akıllı Kolye + 2 Adet Akıllı Bileklik' : '1 Adet Akıllı Kolye + 1 Adet Akıllı Bileklik';
+            } else if (selectedComponent === 'band') {
+                compTitle = isDouble ? 'Kalbiz Çift Akıllı Bileklik Seti' : 'Kalbiz Akıllı Bileklik';
+                compDesc = isDouble ? '2 Adet Titreşim Senkronlu Akıllı Bileklik' : '1 Adet Titreşim Senkronlu Akıllı Bileklik';
+            } else {
+                compTitle = isDouble ? 'Kalbiz Çift Akıllı Kolye Seti' : 'Kalbiz Akıllı Kolye';
+                compDesc = isDouble ? '2 Adet Hisse Duyarlı Akıllı Kolye' : '1 Adet Hisse Duyarlı Akıllı Kolye';
+            }
+
+            title.innerText = compTitle;
+            desc.innerText = compDesc;
+        }
+
+        function buyConfiguredProduct() {
+            const priceText = document.getElementById('shop-dynamic-price').innerText;
+            const titleText = document.getElementById('shop-product-title').innerText;
+            showAppToast(`Sipariş alındı: ${titleText} (${priceText})`);
+        }
+
+        function setTheme(themeName) {
+            showAppToast(`Bileklik arka plan teması değiştirildi: ${themeName}`);
+        }
+
+        function showAppToast(msg) {
+            const toast = document.getElementById('app-toast');
+            document.getElementById('toast-text').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+    </script>
+</body>
+</html>
